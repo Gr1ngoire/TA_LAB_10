@@ -1,14 +1,83 @@
-; Machine starts in state 0.
+; Rule 1: First we write "x" then "y"
+; Rule 2: Both variables in bits form must have equal length 
+; Rule 3: "y" variable must have one "0" symbol before first "1" symbol
 
-; State 0: First symbol check to know how to execute a shift to left (multiply by 2)
+; Multipluing "y" by 2:
+0 _ % r s0
+0 * * r 0 
+
 s0 0 * r s1o
 s0 1 0 l s1i
 s0 _ _ * halt-reject     ; Empty input
 
 ; State 1o, 1i: Second check next symbols for shifting the bits to left 
-s1o _ * r a1
+s1o _ * l a1
 s1o 1 0 l s1i
 s1o 0 * r s1o
 
 s1i _ 1 r s0
 s1i 0 1 r s0
+
+; Back to the start
+a1 _ * r 1
+a1 * * l a1
+
+; Copying (setting markers):
+1 1 * r c2
+1 0 * r c2
+1 _ * * hault-reject
+
+c2 _ ! l c3
+c2 * * r c2
+
+c3 _ ^ r c0
+c3 * * l c3
+
+; Copying (replacing with x and y and moving copies to the left):
+
+c0 ! * l yc1
+c0 * * r c0
+
+yc1 1 x l yc1_1
+yc1 0 y l yc1_0
+yc1 % * l xc0
+
+yc1_1 _ 1 r yc2
+yc1_1 * * l yc1_1
+
+yc1_0 _ 0 r yc2
+yc1_0 * * l yc1_0
+
+yc2 x * l yc1
+yc2 y * l yc1
+yc2 * * r yc2
+
+xc0 _ # r xc0_5
+xc0 * * l xc0
+
+xc0_5 % * l xc1
+xc0_5 * * r xc0_5
+
+xc1 1 x l xc1_1
+xc1 0 y l xc1_0
+xc1 ^ * r backToBits
+
+xc1_1 _ 1 r xc2
+xc1_1 * * l xc1_1
+
+xc1_0 _ 0 r xc2
+xc1_0 * * l xc1_0
+
+xc2 x * l xc1
+xc2 y * l xc1
+xc2 * * r xc2
+
+backToBits ! * l moveToOperatedCopy
+backToBits x 1 r backToBits
+backToBits y 0 r backToBits
+backToBits * * r backToBits
+
+moveToOperatedCopy ^ * l startArythm
+moveToOperatedCopy * * l moveToOperatedCopy
+
+; Addition of 2 * y and x
