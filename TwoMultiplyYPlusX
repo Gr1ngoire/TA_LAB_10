@@ -86,7 +86,7 @@ moveToOperatedCopy * * l moveToOperatedCopy
 
 startArythm 0 y l zeroArythm
 startArythm 1 x l oneArythm
-startArythm # * l translateAnswer
+startArythm # * * moveCypheredAnswer
 
 zeroArythm # * l zero#Logic
 zeroArythm * * l zeroArythm 
@@ -115,3 +115,36 @@ goBackBefore# * * r goBackBefore#
 goBack x * l startArythm
 goBack y * l startArythm
 goBack * * r goBack
+
+moveCypheredAnswer _ * r carryAnswerAfter! 
+moveCypheredAnswer * * l moveCypheredAnswer 
+
+carryAnswerAfter! x _ * moveXToRight
+carryAnswerAfter! y _ * moveYToRight
+carryAnswerAfter! # * * cleanBefore^
+
+moveXToRight ! * * placeXAfter!AndDecypher
+moveXToRight * * r moveXToRight
+
+placeXAfter!AndDecypher _ 1 l moveCypheredAnswer
+placeXAfter!AndDecypher * * r placeXAfter!AndDecypher
+
+moveYToRight ! * * placeYAfter!AndDecypher
+moveYToRight * * r moveYToRight
+
+placeYAfter!AndDecypher _ 0 l moveCypheredAnswer
+placeYAfter!AndDecypher * * r placeYAfter!AndDecypher
+
+cleanBefore^ 0 * * goInEnd
+cleanBefore^ 1 * * goInEnd
+cleanBefore^ * _ r cleanBefore^
+
+goInEnd _ * l clear%And!
+goInEnd * * r goInEnd
+
+clear%And! % _ l clear%And!
+clear%And! ! _ l clear%And!
+clear%And! _ * r return
+clear%And! * * l clear%And!
+
+return _ * r halt-accept
