@@ -1,6 +1,8 @@
 ; Rule 1: First we write "x" then "y"
 ; Rule 2: Both variables in bits form must have equal length 
 ; Rule 3: "y" variable must have one "0" symbol before first "1" symbol
+; TestA x = 1001001 y = 0111101 answer = 11000011
+; TestB x = 0110110 y = 0101110 answer = 10010010
 
 ; Multipluing "y" by 2:
 0 _ % r s0
@@ -80,4 +82,36 @@ backToBits * * r backToBits
 moveToOperatedCopy ^ * l startArythm
 moveToOperatedCopy * * l moveToOperatedCopy
 
-; Addition of 2 * y and x
+; Addition of (2 * y) and x
+
+startArythm 0 y l zeroArythm
+startArythm 1 x l oneArythm
+startArythm # * l translateAnswer
+
+zeroArythm # * l zero#Logic
+zeroArythm * * l zeroArythm 
+
+zero#Logic x * l zero#Logic
+zero#Logic y * l zero#Logic
+zero#Logic 1 x r goBackBefore#
+zero#Logic 0 y r goBackBefore#
+
+
+oneArythm # * l one#Logic
+oneArythm * * l oneArythm
+
+one#Logic x * l one#Logic
+one#Logic y * l one#Logic
+one#Logic 0 x r goBackBefore#
+one#Logic 1 y l OneOneCaseHandle
+
+OneOneCaseHandle 1 0 l OneOneCaseHandle
+OneOneCaseHandle 0 1 r goBackBefore#
+OneOneCaseHandle _ x r goBackBefore#
+
+goBackBefore# # * r goBack
+goBackBefore# * * r goBackBefore#
+
+goBack x * l startArythm
+goBack y * l startArythm
+goBack * * r goBack
