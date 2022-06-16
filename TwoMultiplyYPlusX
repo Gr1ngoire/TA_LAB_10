@@ -1,0 +1,14 @@
+; Machine starts in state 0.
+
+; State 0: First symbol check to know how to execute a shift to left (multiply by 2)
+s0 0 * r s1o
+s0 1 0 l s1i
+s0 _ _ * halt-reject     ; Empty input
+
+; State 1o, 1i: Second check next symbols for shifting the bits to left 
+s1o _ * r a1
+s1o 1 0 l s1i
+s1o 0 * r s1o
+
+s1i _ 1 r s0
+s1i 0 1 r s0
