@@ -1,0 +1,64 @@
+0 * * r 0
+0 _ # l plcopy
+
+;copying hell
+plcopy * * l plcopy
+plcopy _ @ r copy
+
+copy * * r copy
+copy # # l putcopy
+copy a a l putcopy
+copy b b l putcopy
+
+abtonum a 1 r abtonum
+abtonum b 0 r abtonum
+abtonum # # r place1
+
+putcopy 1 a * put1copy
+putcopy 0 b * put0copy
+putcopy @ @ r abtonum
+
+put1copy * * l put1copy
+put1copy _ i r copy
+
+put0copy * * l put0copy
+put0copy _ j r copy
+
+;first 1 after #
+place1 _ 1 l place1
+place1 # # l substract1
+
+
+substract1 0 1 l substract1
+substract1 1 0 r goto#
+substract1 @ @ * gotostart
+
+goto# * * r goto#
+goto# # # r mult2
+
+mult2 * * r mult2
+mult2 _ 0 r gotosub
+
+gotosub * * l gotosub
+gotosub # # l substract1
+
+gotostart * * l gotostart
+gotostart _ _ r restore
+
+restore i _ r restorei
+restore j _ r restorej
+restore @ _ r tonums
+
+restorei * i r gotostart
+restorei @ @ r restorei
+restorei j j r restorei
+restorei i i r restorei
+
+restorej * j r gotostart
+restorej @ @ r restorej
+restorej j j r restorej
+restorej i i r restorej
+
+tonums i 1 r tonums
+tonums j 0 r tonums
+tonums # _ * halt
