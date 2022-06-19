@@ -144,10 +144,9 @@ mnto01 | _ * halt
 ; TestB x = 0110110 y = 0101110 answer = 10010010
 
 ; Multipluing "y" by 2:
-;0 _ % r s0
-;0 * * r 0 
-task2 _ % r s0
-task2 * * r task2 
+0 _ % r s0
+0 * * r 0 
+
 s0 0 * r s1o
 s0 1 0 l s1i
 s0 _ _ * halt-reject     ; Empty input
@@ -257,7 +256,8 @@ goBack y * l startArythm
 goBack * * r goBack
 
 moveCypheredAnswer _ * r carryAnswerAfter! 
-moveCypheredAnswer * * l moveCypheredAnswer
+moveCypheredAnswer * * l moveCypheredAnswer 
+
 carryAnswerAfter! x _ * moveXToRight
 carryAnswerAfter! y _ * moveYToRight
 carryAnswerAfter! # * * cleanBefore^
@@ -281,9 +281,19 @@ cleanBefore^ * _ r cleanBefore^
 goInEnd _ * l clear%And!
 goInEnd * * r goInEnd
 
-clear%And! % _ l clear%And!
+clear%And! % _ r getoToEndOfY
 clear%And! ! _ l clear%And!
 clear%And! _ * r return
 clear%And! * * l clear%And!
 
+getoToEndOfY _ * l divideBy2ToGetInitialY
+getoToEndOfY * * r getoToEndOfY
+
+divideBy2ToGetInitialY 0 * l divideBy2ToGetInitialY
+divideBy2ToGetInitialY 1 0 r replacer
+divideBy2ToGetInitialY _ * l return
+
+replacer 0 1 l divideBy2ToGetInitialY
+
 return _ * r halt-accept
+return * * l return
