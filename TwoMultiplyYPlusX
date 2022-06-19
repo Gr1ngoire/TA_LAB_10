@@ -142,9 +142,19 @@ cleanBefore^ * _ r cleanBefore^
 goInEnd _ * l clear%And!
 goInEnd * * r goInEnd
 
-clear%And! % _ l clear%And!
+clear%And! % _ r getoToEndOfY
 clear%And! ! _ l clear%And!
 clear%And! _ * r return
 clear%And! * * l clear%And!
 
+getoToEndOfY _ * l divideBy2ToGetInitialY
+getoToEndOfY * * r getoToEndOfY
+
+divideBy2ToGetInitialY 0 * l divideBy2ToGetInitialY
+divideBy2ToGetInitialY 1 0 r replacer
+divideBy2ToGetInitialY _ * l return
+
+replacer 0 1 l divideBy2ToGetInitialY
+
 return _ * r halt-accept
+return * * l return
